@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WoW Profit Calculator</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Анализ эффективности приготовления</h1>
+      <h2>Пир полуночного маскарада</h2>
+    </header>
+
+    <section class="inputs">
+      <div class="columns">
+        <div class="column">
+          <ul>
+            <li>
+              <h4>Кахетская трущобная акула</h4>
+              <div class="input-group">
+                <div class="input-wrapper">
+                  <label for="shark-qty">Кол-во</label>
+                  <input type="number" id="shark-qty" value="1000" min="5" step="5">
+                </div>
+                <div class="input-wrapper">
+                  <label for="shark-price">Цена</label>
+                  <input type="number" id="shark-price" value="500" min="0" step="0.1">
+                </div>
+              </div>
+            </li>
+            <li>
+              <button id="toggle-reagents">Развернуть</button>
+              <div id="other-reagents" class="hidden">
+                <ul>
+                  <li>
+                    <h4>Порционный стейк</h4>
+                    <div class="input-group">
+                      <div class="input-wrapper">
+                        <label for="steak-qty">Кол-во</label>
+                        <input type="number" id="steak-qty" disabled>
+                      </div>
+                      <div class="input-wrapper">
+                        <label for="steak-price">Цена</label>
+                        <input type="number" id="steak-price" value="3" min="0" step="0.1">
+                      </div>
+                    </div>
+                  </li>
+                  <li>
+                    <h4>Пряный мясной бульон</h4>
+                    <div class="input-group">
+                      <div class="input-wrapper">
+                        <label for="broth-qty">Кол-во</label>
+                        <input type="number" id="broth-qty" disabled>
+                      </div>
+                      <div class="input-wrapper">
+                        <label for="broth-price">Цена</label>
+                        <input type="number" id="broth-price" value="3" min="0" step="0.1">
+                      </div>
+                    </div>
+                  </li>
+                  <li>
+                    <h4>Букетик трав</h4>
+                    <div class="input-group">
+                      <div class="input-wrapper">
+                        <label for="herbs-qty">Кол-во</label>
+                        <input type="number" id="herbs-qty" disabled>
+                      </div>
+                      <div class="input-wrapper">
+                        <label for="herbs-price">Цена</label>
+                        <input type="number" id="herbs-price" value="0.2" min="0" step="0.1">
+                      </div>
+                    </div>
+                  </li>
+                  <li>
+                    <h4>Горячие соты</h4>
+                    <div class="input-group">
+                      <div class="input-wrapper">
+                        <label for="honey-qty">Кол-во</label>
+                        <input type="number" id="honey-qty" disabled>
+                      </div>
+                      <div class="input-wrapper">
+                        <label for="honey-price">Цена</label>
+                        <input type="number" id="honey-price" value="20" min="0" step="0.1">
+                      </div>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </li>
+          </ul>
+        </div>
+        <div class="column">
+          <ul>
+            <li>
+              <h4>Готовые пиры</h4>
+              <div class="input-group">
+                <div class="input-wrapper">
+                  <label for="feast-qty">Кол-во</label>
+                  <input type="number" id="feast-qty" value="1500" min="1">
+                </div>
+                <div class="input-wrapper">
+                  <label for="feast-price">Цена</label>
+                  <input type="number" id="feast-price" value="410" min="0" step="0.1">
+                </div>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="buttons">
+      <button id="reset">Сбросить</button>
+    </section>
+
+    <section id="results" class="results">
+      <div class="summary">
+        <p>Прибыль на 1 акулу: <span id="profit-per-shark"></span></p>
+        <p>Мин. цена продажи (без убытков): <span id="min-sell-price"></span></p>
+        <button id="toggle-analytics">Подробно</button>
+      </div>
+      <div id="detailed-analytics" class="hidden">
+        <div class="columns">
+          <div class="column">
+            <p>Затраты на 1 пир: <span id="cost-per-feast"></span></p>
+            <p>Процент прибыли: <span id="profit-percentage"></span></p>
+            <p>Шаг прибыли на +10 золота (1 акула): <span id="profit-step"></span></p>
+            <p>Рекомендуемая цена продажи: <span id="recommended-price"></span></p>
+          </div>
+          <div class="column">
+            <p>Общие затраты: <span id="total-cost"></span></p>
+            <p>Общая прибыль: <span id="total-profit"></span></p>
+            <p>Цена для +30k прибыли: <span id="target-30k"></span></p>
+            <p>Цена для +50k прибыли: <span id="target-50k"></span></p>
+          </div>
+        </div>
+      </div>
+      <canvas id="profit-graph" width="400" height="200"></canvas>
+    </section>
+  </div>
+
+  <script src="calculations/profit.js"></script>
+  <script src="config/recipes.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>

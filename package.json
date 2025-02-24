@@ -2,12 +2,15 @@
   "name": "wow-profit-alerts",
   "version": "1.0.0",
   "description": "Check World of Warcraft auction prices and alert if craft is profit",
-  "main": "src/main.js",
+  "main": "src/index.html",
   "scripts": {
     "start": "node src/main.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "deploy": "gh-pages -d src"
   },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "gh-pages": "^6.3.0"
+  }
 }
