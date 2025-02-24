@@ -3,14 +3,14 @@ body {
   color: #fff;
   font-family: 'Arial', sans-serif;
   margin: 0;
-  padding: 20px;
+  padding: 10px;
 }
 
 .container {
   max-width: 800px;
   margin: 0 auto;
   background: rgba(0, 0, 0, 0.8);
-  padding: 20px;
+  padding: 15px;
   border: 2px solid #b8860b;
   border-radius: 5px;
   box-shadow: 0 0 10px rgba(184, 134, 11, 0.5);
@@ -23,13 +23,13 @@ header h1, header h2 {
 }
 
 header h1 {
-  font-size: 28px;
+  font-size: 24px;
   margin-bottom: 10px;
 }
 
 header h2 {
-  font-size: 22px;
-  margin-bottom: 20px;
+  font-size: 18px;
+  margin-bottom: 15px;
 }
 
 h4 {
@@ -59,7 +59,7 @@ h4 {
 .input-group {
   display: flex;
   align-items: center;
-  gap: 50px;
+  gap: 40px;
 }
 
 .input-wrapper {
@@ -79,6 +79,7 @@ input {
   color: #fff;
   border-radius: 3px;
   width: 80px;
+  font-size: 14px;
 }
 
 input:disabled {
@@ -94,6 +95,7 @@ input:disabled {
   border-radius: 3px;
   cursor: pointer;
   text-shadow: 1px 1px 2px #000;
+  font-size: 14px;
 }
 
 #toggle-reagents:hover {
@@ -106,7 +108,7 @@ input:disabled {
 
 .buttons {
   text-align: right;
-  margin: 20px 0;
+  margin: 15px 0;
 }
 
 button {
@@ -117,6 +119,7 @@ button {
   border-radius: 5px;
   cursor: pointer;
   text-shadow: 1px 1px 2px #000;
+  font-size: 14px;
 }
 
 button:hover {
@@ -135,10 +138,13 @@ button:hover {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
 }
 
 .summary p {
   margin: 5px 0;
+  font-size: 14px;
 }
 
 .summary button {
@@ -150,7 +156,108 @@ button:hover {
   color: #ffd700;
 }
 
+#detailed-analytics .columns {
+  display: flex;
+  gap: 15px;
+}
+
 #profit-graph {
   margin-top: 20px;
   max-width: 100%;
+  height: 200px;
+}
+
+/* Мобильная версия */
+@media (max-width: 768px) {
+  body {
+    padding: 5px;
+  }
+
+  .container {
+    padding: 10px;
+    margin: 0 5px;
+  }
+
+  header h1 {
+    font-size: 20px;
+    margin-bottom: 8px;
+  }
+
+  header h2 {
+    font-size: 16px;
+    margin-bottom: 10px;
+  }
+
+  h4 {
+    font-size: 14px;
+  }
+
+  .columns {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .input-group {
+    gap: 15px;
+    justify-content: space-between;
+  }
+
+  .input-wrapper {
+    width: 100%;
+  }
+
+  input {
+    width: 100%;
+    box-sizing: border-box;
+    font-size: 16px;
+    padding: 8px;
+  }
+
+  #toggle-reagents {
+    width: 100%;
+    padding: 8px;
+    font-size: 16px;
+  }
+
+  .buttons {
+    text-align: center;
+    margin: 10px 0;
+  }
+
+  button {
+    width: 100%;
+    padding: 12px;
+    font-size: 16px;
+  }
+
+  .summary {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .summary p {
+    font-size: 16px;
+    white-space: nowrap; /* Предотвращаем некрасивые переносы */
+  }
+
+  .summary button {
+    width: 100%;
+    padding: 8px;
+    font-size: 14px;
+  }
+
+  #detailed-analytics .columns {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  #detailed-analytics p {
+    font-size: 14px;
+    white-space: nowrap; /* Предотвращаем переносы */
+  }
+
+  #profit-graph {
+    height: 300px; /* Увеличиваем высоту для читаемости */
+  }
 }

@@ -6,8 +6,8 @@ function calculateProfit(recipe, marketPrice, sharkPrice, sharkQty, totalItems) 
     ),
   };
 
-  const sets = sharkQty / 5; // Количество наборов (5 акул на набор)
-  const procFactor = totalItems / (sets * recipe.yield); // Динамический коэффициент прока
+  const sets = sharkQty / 5;
+  const procFactor = totalItems / (sets * recipe.yield);
   const baseCost =
     updatedRecipe.ingredients.reduce((sum, { qty, price }) => sum + qty * price, 0) /
     updatedRecipe.yield;
@@ -28,9 +28,11 @@ function calculateProfit(recipe, marketPrice, sharkPrice, sharkQty, totalItems) 
   const profitPerShark = totalProfit / sharkQty;
   const recommendedSellPrice = minSellPrice + 10;
 
+  // Уменьшенный диапазон для графика
   const graphData = [];
-  const startPrice = Math.floor((minSellPrice - 20) / 5) * 5;
-  for (let price = startPrice; price <= marketPrice + 20; price += 5) {
+  const startPrice = Math.floor((minSellPrice - 10) / 5) * 5; // Сужаем до ±10 от текущей цены
+  const endPrice = Math.ceil((marketPrice + 10) / 5) * 5;
+  for (let price = startPrice; price <= endPrice; price += 5) {
     const effectiveGraphPrice = price * 0.95;
     const graphProfit = (effectiveGraphPrice - adjustedCost) * totalItems;
     const graphProfitPerItem = (effectiveGraphPrice - adjustedCost);
@@ -58,7 +60,6 @@ function calculateProfit(recipe, marketPrice, sharkPrice, sharkQty, totalItems) 
     profitPercentage: Math.round(profitPercentage),
     profitPerShark: Math.round(profitPerShark * 10) / 10,
     recommendedSellPrice: Math.round(recommendedSellPrice),
-    procFactor: Math.round(procFactor * 100) / 100, // Для отладки, если нужно
     graphData,
   };
 }
