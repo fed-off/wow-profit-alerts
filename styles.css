@@ -1,0 +1,156 @@
+body {
+  background: #1a1a1a url('https://wow.zamimg.com/images/backgrounds/parchment-dark.jpg') repeat;
+  color: #fff;
+  font-family: 'Arial', sans-serif;
+  margin: 0;
+  padding: 20px;
+}
+
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  background: rgba(0, 0, 0, 0.8);
+  padding: 20px;
+  border: 2px solid #b8860b;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(184, 134, 11, 0.5);
+}
+
+header h1, header h2 {
+  color: #ffd700;
+  text-align: center;
+  text-shadow: 1px 1px 2px #000;
+}
+
+header h1 {
+  font-size: 28px;
+  margin-bottom: 10px;
+}
+
+header h2 {
+  font-size: 22px;
+  margin-bottom: 20px;
+}
+
+h4 {
+  color: #ffd700;
+  margin: 0 0 5px;
+  font-size: 16px;
+}
+
+.inputs ul {
+  list-style: none;
+  padding: 0;
+}
+
+.inputs li {
+  margin-bottom: 15px;
+}
+
+.columns {
+  display: flex;
+  gap: 20px;
+}
+
+.column {
+  flex: 1;
+}
+
+.input-group {
+  display: flex;
+  align-items: center;
+  gap: 50px;
+}
+
+.input-wrapper {
+  display: grid;
+  text-align: center;
+}
+
+.input-wrapper label {
+  color: #d3d3d3;
+  margin-bottom: 5px;
+}
+
+input {
+  padding: 5px;
+  background: #333;
+  border: 1px solid #b8860b;
+  color: #fff;
+  border-radius: 3px;
+  width: 80px;
+}
+
+input:disabled {
+  background: #222;
+  color: #888;
+}
+
+#toggle-reagents {
+  padding: 5px 10px;
+  background: #b8860b;
+  color: #fff;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+  text-shadow: 1px 1px 2px #000;
+}
+
+#toggle-reagents:hover {
+  background: #daa520;
+}
+
+.hidden {
+  display: none;
+}
+
+.buttons {
+  text-align: right;
+  margin: 20px 0;
+}
+
+button {
+  padding: 10px 20px;
+  background: #b8860b;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  text-shadow: 1px 1px 2px #000;
+}
+
+button:hover {
+  background: #daa520;
+}
+
+.results {
+  background: rgba(0, 0, 0, 0.7);
+  padding: 15px;
+  border: 1px solid #b8860b;
+  border-radius: 5px;
+  color: #d3d3d3;
+}
+
+.summary {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.summary p {
+  margin: 5px 0;
+}
+
+.summary button {
+  padding: 5px 10px;
+  font-size: 12px;
+}
+
+.results p span {
+  color: #ffd700;
+}
+
+#profit-graph {
+  margin-top: 20px;
+  max-width: 100%;
+}
