@@ -19,17 +19,22 @@ async function fetchItemPrices(itemIds) {
       console.log(`Статус ответа: ${response.status} ${response.statusText}`);
 
       const data = response.data.data;
-      const listings = data.listingData.slice(0, 3); // Первые 3 лота
+      const listings = data.listingData.slice(0, 3);
+
+      const priceHistory = data.priceTimeData || [];
+      const qtyHistory = data.quantityTimeData || [];
 
       prices[id] = {
         listings: listings.map(l => ({ price: l.price, quantity: l.quantity })),
         minPrice: data.minPrice,
         totalQuantity: data.quantity,
-        salesPerDay: data.salesPerDay || 0, // Количество продаж в день
+        salesPerDay: data.salesPerDay || 0,
+        prevMinPrice: priceHistory.length >= 2 ? priceHistory[priceHistory.length - 2] : null,
+        prevTotalQuantity: qtyHistory.length >= 2 ? qtyHistory[qtyHistory.length - 2] : null,
       };
     } catch (error) {
       console.error(`Ошибка для ${id}: ${error.message}`);
-      prices[id] = { listings: [], minPrice: null, totalQuantity: 0, salesPerDay: 0 };
+      prices[id] = { listings: [], minPrice: null, totalQuantity: 0, salesPerDay: 0, prevMinPrice: null, prevTotalQuantity: 0 };
     }
   }
   return prices;

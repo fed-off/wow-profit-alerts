@@ -9,8 +9,6 @@ const FEAST_ID = 222733;
 const SHARK_QTY = 1000;
 const FIXED_SHARK_PRICE = 500;
 
-let lastPrices = { [SHARK_ID]: { minPrice: null, totalQuantity: 0 }, [FEAST_ID]: { minPrice: null, totalQuantity: 0 } };
-
 async function checkPrices() {
   console.log('Проверка цен...', new Date().toLocaleString('ru-RU', { timeZone: 'Europe/Moscow' }));
 
@@ -22,6 +20,10 @@ async function checkPrices() {
   const feastQty = prices[FEAST_ID]?.totalQuantity || 0;
   const sharkSales = prices[SHARK_ID]?.salesPerDay || 0;
   const feastSales = prices[FEAST_ID]?.salesPerDay || 0;
+  const sharkPrevPrice = prices[SHARK_ID]?.prevMinPrice;
+  const feastPrevPrice = prices[FEAST_ID]?.prevMinPrice;
+  const sharkPrevQty = prices[SHARK_ID]?.prevTotalQuantity;
+  const feastPrevQty = prices[FEAST_ID]?.prevTotalQuantity;
   const totalItems = SHARK_QTY / 5 * recipes.midnightMasqueradeFeast.yield * 1.5;
 
   const currentAnalysis = calculateProfit(recipes.midnightMasqueradeFeast, feastPrice, sharkPrice, SHARK_QTY, totalItems);
@@ -31,15 +33,12 @@ async function checkPrices() {
   const feastListings = prices[FEAST_ID]?.listings || [];
 
   const sharkStatus = sharkPrice <= 501 ? '✅' : sharkPrice <= 510 ? '❓' : '❌';
-  const feastStatus = feastPrice >= 420 ? '✅' : feastPrice >= 405 ? '❓' : '❌';
+  const feastStatus = feastPrice >= 445 ? '✅✅' : feastPrice >= 420 ? '✅' : feastPrice >= 405 ? '❓' : '❌';
 
-  const sharkPriceChange = lastPrices[SHARK_ID].minPrice ? (sharkPrice > lastPrices[SHARK_ID].minPrice ? '🟢' : sharkPrice < lastPrices[SHARK_ID].minPrice ? '🔴' : '') : '';
-  const feastPriceChange = lastPrices[FEAST_ID].minPrice ? (feastPrice > lastPrices[FEAST_ID].minPrice ? '🟢' : feastPrice < lastPrices[FEAST_ID].minPrice ? '🔴' : '') : '';
-  const sharkQtyChange = lastPrices[SHARK_ID].totalQuantity ? (sharkQty > lastPrices[SHARK_ID].totalQuantity ? '🟢' : sharkQty < lastPrices[SHARK_ID].totalQuantity ? '🔴' : '') : '';
-  const feastQtyChange = lastPrices[FEAST_ID].totalQuantity ? (feastQty > lastPrices[FEAST_ID].totalQuantity ? '🟢' : feastQty < lastPrices[FEAST_ID].totalQuantity ? '🔴' : '') : '';
-
-  lastPrices[SHARK_ID] = { minPrice: sharkPrice, totalQuantity: sharkQty };
-  lastPrices[FEAST_ID] = { minPrice: feastPrice, totalQuantity: feastQty };
+  const sharkPriceChange = sharkPrevPrice ? (sharkPrice > sharkPrevPrice ? '🟢' : sharkPrice < sharkPrevPrice ? '🔴' : '') : '';
+  const feastPriceChange = feastPrevPrice ? (feastPrice > feastPrevPrice ? '🟢' : feastPrice < feastPrevPrice ? '🔴' : '') : '';
+  const sharkQtyChange = sharkPrevQty ? (sharkQty > sharkPrevQty ? '🟢' : sharkQty < sharkPrevQty ? '🔴' : '') : '';
+  const feastQtyChange = feastPrevQty ? (feastQty > feastPrevQty ? '🟢' : feastQty < feastPrevQty ? '🔴' : '') : '';
 
   const now = new Date();
   const days = ['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'];
@@ -57,7 +56,7 @@ async function checkPrices() {
 2. ${sharkListings[1]?.price || '-'} g (${sharkListings[1]?.quantity || 0})
 3. ${sharkListings[2]?.price || '-'} g (${sharkListings[2]?.quantity || 0})
 
-🍖 Пир ${feastStatus}
+🍜 Пир ${feastStatus}
 Общее количество: ${feastQty} ${feastQtyChange}
 Мин. цена: ${feastPrice} g ${feastPriceChange}
 Селрейт: ${feastSales}/день
@@ -71,8 +70,8 @@ async function checkPrices() {
 По 500g: ${fixedAnalysis.totalProfit} g
   `.trim();
 
-  await sendMessage(message); // Ждём отправку
+  await sendMessage(message);
 }
 
-schedule.scheduleJob('2 * * * *', checkPrices); // UTC 02 = МСК 05
+schedule.scheduleJob('*/5 * * * *', checkPrices);
 checkPrices();

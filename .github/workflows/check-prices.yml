@@ -2,12 +2,12 @@ name: Check WoW Prices
 
 on:
   schedule:
-    - cron: "2 * * * *" # UTC 02:00 = МСК 05:00
+    - cron: "*/5 * * * *" # Каждые 5 минут UTC
 
 jobs:
   check-prices:
     runs-on: ubuntu-latest
-    timeout-minutes: 1 # Ограничение 1 минута
+    timeout-minutes: 2 # 2 минуты на выполнение
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
