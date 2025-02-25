@@ -1,46 +1,68 @@
-const { fetchTSMData } = require('./api/tsm');
+const schedule = require('node-schedule');
+const { fetchAuctionPrices } = require('./api/saddlebag');
 const { calculateProfit } = require('./calculations/profit');
 const { recipes } = require('./config/recipes');
-const schedule = require('node-schedule');
+const { sendMessage } = require('./telegram/bot');
 
-async function run() {
-  console.log('Запуск проверки цен...');
+const SHARK_ID = 220147;
+const FEAST_ID = 222733;
+const TOKEN_ID = 122284;
+const REGION = 'eu';
+const REALM = 'gordunni';
+const SHARK_QTY = 1000;
+const FIXED_SHARK_PRICE = 500;
 
-  // ID предметов для запроса
-  const itemIds = [222733, 220147]; // Пир и акула
-  const prices = await fetchTSMData(itemIds);
+async function checkPrices(retryCount = 0, maxRetries = 3) {
+  console.log('Проверка цен...', new Date().toLocaleString());
+  const prices = await fetchAuctionPrices(REGION, REALM, [SHARK_ID, FEAST_ID, TOKEN_ID]);
 
-  if (!prices) {
-    console.log('Не удалось получить данные о ценах.');
+  if (!prices && retryCount < maxRetries) {
+    console.log(`Повторная попытка ${retryCount + 1}/${maxRetries} через 1 минуту...`);
+    setTimeout(() => checkPrices(retryCount + 1, maxRetries), 60 * 1000);
     return;
   }
 
-  // Парсинг данных из ответа TSM API
-  const feastPrice = prices.find(item => item.itemId === 222733)?.minBuyout || 0;
-  const sharkPrice = prices.find(item => item.itemId === 220147)?.minBuyout || 0;
-
-  // Обновляем рецепт с актуальной ценой акулы
-  const recipe = { ...recipes.midnightMasqueradeFeast };
-  recipe.ingredients.find(ing => ing.itemId === 220147).price = sharkPrice;
-
-  // Расчёт прибыли для 200 наборов (1000 акул = 200 наборов по 5 акул)
-  const analysis = calculateProfit(recipe, feastPrice, 200);
-
-  console.log(`Цена пира: ${feastPrice} золота`);
-  console.log(`Цена акулы: ${sharkPrice} золота`);
-  console.log(`Прибыль с 1 пира: ${analysis.profitPerItem} золота`);
-  console.log(`Общая прибыль с 1500 пиров: ${analysis.totalProfit} золота`);
-
-  // Условие для уведомления (пока просто логи)
-  if (analysis.totalProfit > 30000) {
-    console.log('Выгодно готовить пир! Нужно уведомить в Telegram!');
-  } else {
-    console.log('Сейчас готовить невыгодно.');
+  if (!prices) {
+    sendMessage('Не удалось получить данные с аукциона после всех попыток.');
+    return;
   }
+
+  const sharkPrice = prices[SHARK_ID] || 500;
+  const feastPrice = prices[FEAST_ID] || 410;
+  const tokenPrice = prices[TOKEN_ID] || 0;
+  const totalItems = SHARK_QTY / 5 * recipes.midnightMasqueradeFeast.yield * 1.5;
+
+  const currentAnalysis = calculateProfit(
+    recipes.midnightMasqueradeFeast,
+    feastPrice,
+    sharkPrice,
+    SHARK_QTY,
+    totalItems
+  );
+
+  const fixedAnalysis = calculateProfit(
+    recipes.midnightMasqueradeFeast,
+    feastPrice,
+    FIXED_SHARK_PRICE,
+    SHARK_QTY,
+    totalItems
+  );
+
+  const message = `
+📊 Аукцион (Гордунни, EU):
+- Акула: ${sharkPrice} g
+- Пир: ${feastPrice} g
+- Жетон: ${tokenPrice} g
+- Прибыль (1000 акул сейчас): ${currentAnalysis.totalProfit} g
+- Прибыль (акулы по 500g): ${fixedAnalysis.totalProfit} g
+  `.trim();
+
+  sendMessage(message);
+  console.log(message);
 }
 
-// Запуск каждый час
-schedule.scheduleJob('0 * * * *', run);
+// Запуск каждый час на 5-й минуте
+schedule.scheduleJob('5 * * * *', () => checkPrices(0, 3));
 
-// Первый запуск сразу
-run();
+// Первый запуск для теста
+checkPrices(0, 3);

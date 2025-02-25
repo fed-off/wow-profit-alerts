@@ -1,13 +1,14 @@
 {
-  "name": "wow-profit-alerts",
+  "name": "wow-profit-backend",
   "version": "1.0.0",
-  "description": "Check World of Warcraft auction prices and alert if craft is profit",
   "main": "src/main.js",
   "scripts": {
-    "start": "node src/main.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node src/main.js"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC"
+  "dependencies": {
+    "axios": "^1.7.9",
+    "dotenv": "^16.4.7",
+    "node-schedule": "^2.1.1",
+    "node-telegram-bot-api": "^0.66.0"
+  }
 }

@@ -1,22 +1,31 @@
-function calculateProfit(recipe, marketPrice, sets) {
-  // Стоимость реагентов для 1 набора (5 пиров без прока)
+function calculateProfit(recipe, marketPrice, sharkPrice, sharkQty, totalItems) {
+  const updatedRecipe = {
+    ...recipe,
+    ingredients: recipe.ingredients.map(ing =>
+      ing.name === 'Кахетская трущобная акула' ? { ...ing, price: sharkPrice } : ing
+    ),
+  };
+
+  const sets = sharkQty / 5;
+  const procFactor = totalItems / (sets * recipe.yield);
   const baseCost =
-    recipe.ingredients.reduce((sum, { qty, price }) => sum + qty * price, 0) / recipe.yield;
-
-  // Учёт прока (1.5x выход)
-  const adjustedCost = baseCost / recipe.procFactor;
-
-  // Прибыль с 1 пира
-  const profitPerItem = marketPrice - adjustedCost;
-
-  // Общая прибыль с учётом количества наборов и прока
-  const totalItems = sets * recipe.yield * recipe.procFactor;
+    updatedRecipe.ingredients.reduce((sum, { qty, price }) => sum + qty * price, 0) /
+    updatedRecipe.yield;
+  const adjustedCost = baseCost / procFactor;
+  const effectivePrice = marketPrice * 0.95;
+  const profitPerItem = effectivePrice - adjustedCost;
   const totalProfit = profitPerItem * totalItems;
+  const totalCost = adjustedCost * totalItems;
+
+  const minSellPrice = adjustedCost / 0.95;
+  const profitPerShark = totalProfit / sharkQty;
 
   return {
-    profitPerItem: Math.round(profitPerItem),
     totalProfit: Math.round(totalProfit),
+    totalCost: Math.round(totalCost),
     adjustedCost: Math.round(adjustedCost),
+    minSellPrice: Math.round(minSellPrice),
+    profitPerShark: Math.round(profitPerShark * 10) / 10,
   };
 }
 
