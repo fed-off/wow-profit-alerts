@@ -2,7 +2,9 @@ name: Check WoW Prices
 
 on:
   schedule:
-    - cron: "5 * * * *" # Каждый час на 5-й минуте
+    - cron: "5 * * * *"
+  push:
+    branches: [main]
 
 jobs:
   check-prices:
