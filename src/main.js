@@ -46,18 +46,18 @@ async function checkPrices() {
   const message = `
 📈 ${dateStr}
 
-🦈 Акула ${sharkStatus}
-Общее количество: ${sharkQty} ${sharkQtyChange}
-Мин. цена: ${sharkPrice} g ${sharkPriceChange}
+🦈 Акула   |   ${sharkStatus}
+Общее количество: ${sharkQtyChange} ${sharkQty} 
+Мин. цена: ${sharkPriceChange} ${sharkPrice}g 
 Селрейт: ${sharkSales}/день
 Лоты:
 1. ${sharkListings[0]?.price || '-'} g (${sharkListings[0]?.quantity || 0})
 2. ${sharkListings[1]?.price || '-'} g (${sharkListings[1]?.quantity || 0})
 3. ${sharkListings[2]?.price || '-'} g (${sharkListings[2]?.quantity || 0})
 
-🍜 Пир ${feastStatus}
-Общее количество: ${feastQty} ${feastQtyChange}
-Мин. цена: ${feastPrice} g ${feastPriceChange}
+🍜 Пир   |   ${feastStatus}
+Общее количество: ${feastQtyChange} ${feastQty} 
+Мин. цена: ${feastPriceChange} ${feastPrice}g 
 Селрейт: ${feastSales}/день
 Лоты:
 1. ${feastListings[0]?.price || '-'} g (${feastListings[0]?.quantity || 0})
@@ -65,8 +65,8 @@ async function checkPrices() {
 3. ${feastListings[2]?.price || '-'} g (${feastListings[2]?.quantity || 0})
 
 💰 Прибыль на 1000 акул
-Текущая: ${currentAnalysis.totalProfit} g
-По 500g: ${fixedAnalysis.totalProfit} g
+Текущая: ${currentAnalysis.totalProfit}g
+По 500g: ${fixedAnalysis.totalProfit}g
   `.trim();
 
   await sendMessage(message);
