@@ -2,25 +2,21 @@ name: Check WoW Prices
 
 on:
   schedule:
-    - cron: "5 * * * *"
-  push:
-    branches: [main]
+    - cron: "2 * * * *" # UTC 02:00 = МСК 05:00
 
 jobs:
   check-prices:
     runs-on: ubuntu-latest
+    timeout-minutes: 1 # Ограничение 1 минута
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: "20"
-
       - name: Install dependencies
         run: npm install
-
       - name: Run price check
         run: node src/main.js
         env:
