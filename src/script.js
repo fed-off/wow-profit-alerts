@@ -85,17 +85,17 @@ document.addEventListener('DOMContentLoaded', () => {
       totalItems
     );
 
-    document.getElementById('profit-per-shark').textContent = `${analysis.profitPerShark} золота`;
-    document.getElementById('min-sell-price').textContent = `${analysis.minSellPrice} золота`;
+    document.getElementById('profit-per-shark').textContent = `${analysis.profitPerShark} g`;
+    document.getElementById('min-sell-price').textContent = `${analysis.minSellPrice} g`;
 
-    document.getElementById('cost-per-feast').textContent = `${analysis.adjustedCost} золота`;
+    document.getElementById('cost-per-feast').textContent = `${analysis.adjustedCost} g`;
     document.getElementById('profit-percentage').textContent = `${analysis.profitPercentage}%`;
-    document.getElementById('profit-step').textContent = `${analysis.profitStepPerShark} золота`;
-    document.getElementById('recommended-price').textContent = `${analysis.recommendedSellPrice} золота`;
-    document.getElementById('total-cost').textContent = `${analysis.totalCost} золота`;
-    document.getElementById('total-profit').textContent = `${analysis.totalProfit} золота`;
-    document.getElementById('target-30k').textContent = `${analysis.targetSellPrice30k} золота`;
-    document.getElementById('target-50k').textContent = `${analysis.targetSellPrice50k} золота`;
+    document.getElementById('profit-step').textContent = `${analysis.profitStepPerShark} g`;
+    document.getElementById('recommended-price').textContent = `${analysis.recommendedSellPrice} g`;
+    document.getElementById('total-cost').textContent = `${analysis.totalCost} g`;
+    document.getElementById('total-profit').textContent = `${analysis.totalProfit} g`;
+    document.getElementById('target-30k').textContent = `${analysis.targetSellPrice30k} g`;
+    document.getElementById('target-50k').textContent = `${analysis.targetSellPrice50k} g`;
 
     if (chart) chart.destroy();
     chart = new Chart(ctx, {
@@ -115,24 +115,24 @@ document.addEventListener('DOMContentLoaded', () => {
       options: {
         scales: {
           x: {
-            title: { display: true, text: 'Цена продажи (золото)', color: '#fff' },
+            title: { display: true, text: 'Цена продажи (g)', color: '#fff' },
             grid: { display: true, color: 'rgba(255, 255, 255, 0.1)' },
           },
           y: {
-            title: { display: true, text: 'Прибыль (золото)', color: '#fff' },
+            title: { display: true, text: 'Прибыль (g)', color: '#fff' },
             grid: { display: true, color: 'rgba(255, 255, 255, 0.1)' },
           },
         },
         plugins: {
           legend: { display: false },
           tooltip: {
-            displayColors: false, // Убираем квадратик с цветом
+            displayColors: false,
             callbacks: {
               label: (context) => {
                 const data = analysis.graphData[context.dataIndex];
                 return [
-                  `Общая прибыль: ${data.profit} золота`,
-                  `Прибыль за 1 пир: ${data.profitPerItem} золота`,
+                  `Прибыль: ${data.profit} g`,
+                  `За 1 пир: ${data.profitPerItem} g`,
                 ];
               },
             },
