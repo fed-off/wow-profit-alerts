@@ -61,7 +61,7 @@ async function checkPrices() {
   const dateStr = `${now.getDate()}.${now.getMonth() + 1}.${now.getFullYear()} (${days[now.getDay()]}) ${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
 
   const message = `
-📈 *Аукцион Гордунни* | ${dateStr}
+📈 ${dateStr}
 ${sharkStatus.join(' | ') || '🦈 Всё ок'}
 ${feastStatus.join(' | ') || '🍖 Всё ок'}
 
@@ -76,8 +76,8 @@ ${feastStatus.join(' | ') || '🍖 Всё ок'}
   3️⃣ ${feastListings[2]?.price || '-'} g (${feastListings[2]?.quantity || 0})
 
 💰 *Прибыль на 1000 акул*
-  Сейчас: **${currentAnalysis.totalProfit} g**
-  Если акулы по 500g: **${fixedAnalysis.totalProfit} g**
+  Сейчас: *${currentAnalysis.totalProfit} g*
+  Если акулы по 500g: *${fixedAnalysis.totalProfit} g*
   `.trim();
 
   sendMessage(message);
