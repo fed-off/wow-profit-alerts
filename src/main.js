@@ -42,18 +42,12 @@ async function checkPrices() {
   const feastListings = prices[FEAST_ID]?.listings || [];
 
   // Логика фраз
-  const sharkStatus = [];
-  const feastStatus = [];
-  if (sharkPrice <= 501) sharkStatus.push('🦈 СКУПАЕМ АКУЛУ');
-  else if (sharkPrice > 501 && sharkPrice <= 510) sharkStatus.push('🦈 Проверяем акулу');
-  else if (sharkPrice > 510) sharkStatus.push('🦈 Акулы фигня');
-
-  if (feastPrice >= 420) feastStatus.push('🍖 СЛИВАЕМ ПИРЫ');
-  else if (feastPrice < 420 && feastPrice >= 403) feastStatus.push('🍖 Проверяем пиры');
-  else if (feastPrice < 403 && feastPrice >= 380) feastStatus.push('🍖 Пиры фигня');
-
-  if (feastQty > 20000) feastStatus.push('🍖 Перенасыщенность пирами');
-  else if (feastQty < 12000) feastStatus.push('🍖 Время продавать');
+  const sharkStatus = sharkPrice <= 501 ? '🦈 СКУПАЕМ АКУЛУ' :
+                     sharkPrice <= 510 ? '🦈 Проверяем акулу' :
+                     '🦈 Акулы фигня';
+  const feastStatus = feastPrice >= 420 ? '🍖 СЛИВАЕМ ПИРЫ' :
+                     feastPrice >= 403 ? '🍖 Проверяем пиры' :
+                     feastPrice >= 380 ? '🍖 Пиры фигня' : '🍖 Всё ок';
 
   // Дата и время
   const now = new Date();
@@ -62,22 +56,21 @@ async function checkPrices() {
 
   const message = `
 📈 ${dateStr}
-${sharkStatus.join(' | ') || '🦈 Всё ок'}
-${feastStatus.join(' | ') || '🍖 Всё ок'}
+${sharkStatus} | ${feastStatus}
 
-🦈 *Акула* | ${sharkQty} шт | ~${sharkSales}/день
-  1️⃣ ${sharkListings[0]?.price || '-'} g (${sharkListings[0]?.quantity || 0})
-  2️⃣ ${sharkListings[1]?.price || '-'} g (${sharkListings[1]?.quantity || 0})
-  3️⃣ ${sharkListings[2]?.price || '-'} g (${sharkListings[2]?.quantity || 0})
+🦈 Акула (${sharkQty} шт, ~${sharkSales}/день)
+1. ${sharkListings[0]?.price || '-'} g (${sharkListings[0]?.quantity || 0})
+2. ${sharkListings[1]?.price || '-'} g (${sharkListings[1]?.quantity || 0})
+3. ${sharkListings[2]?.price || '-'} g (${sharkListings[2]?.quantity || 0})
 
-🍖 *Пир* | ${feastQty} шт | ~${feastSales}/день
-  1️⃣ ${feastListings[0]?.price || '-'} g (${feastListings[0]?.quantity || 0})
-  2️⃣ ${feastListings[1]?.price || '-'} g (${feastListings[1]?.quantity || 0})
-  3️⃣ ${feastListings[2]?.price || '-'} g (${feastListings[2]?.quantity || 0})
+🍖 Пир (${feastQty} шт, ~${feastSales}/день)
+1. ${feastListings[0]?.price || '-'} g (${feastListings[0]?.quantity || 0})
+2. ${feastListings[1]?.price || '-'} g (${feastListings[1]?.quantity || 0})
+3. ${feastListings[2]?.price || '-'} g (${feastListings[2]?.quantity || 0})
 
-💰 *Прибыль на 1000 акул*
-  Сейчас: *${currentAnalysis.totalProfit} g*
-  Если акулы по 500g: *${fixedAnalysis.totalProfit} g*
+💰 Прибыль на 1000 акул
+Текущая: ${currentAnalysis.totalProfit} g
+По 500g: ${fixedAnalysis.totalProfit} g
   `.trim();
 
   sendMessage(message);
