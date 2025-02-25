@@ -9,7 +9,9 @@ const SHARK_QTY = 1000;
 const FIXED_SHARK_PRICE = 500;
 
 async function checkPrices() {
-  console.log('Проверка цен...', new Date().toLocaleString('ru-RU', { timeZone: 'Europe/Moscow' }));
+  // Время для МСК (+3 от UTC)
+  const now = process.env.GITHUB_ACTIONS ? new Date(Date.now() + 3 * 60 * 60 * 1000) : new Date();
+  console.log('Проверка цен...', now.toLocaleString('ru-RU', { timeZone: 'Europe/Moscow' }));
 
   const prices = await fetchItemPrices([SHARK_ID, FEAST_ID]);
 
@@ -35,34 +37,39 @@ async function checkPrices() {
   const feastStatus = feastPrice >= 445 ? '✅✅' : feastPrice >= 420 ? '✅' : feastPrice >= 405 ? '❓' : '❌';
 
   const sharkPriceChange = sharkPrevPrice ? (sharkPrice > sharkPrevPrice ? '➚' : sharkPrice < sharkPrevPrice ? '➘' : '') : '';
-  const feastPriceChange = feastPrevPrice ? (feastPrice > feastPrevPrice ? '➚' : feastPrice < feastPrevPrice ? '➘' : '') : '';
+  const feastPriceChange = feastPrevPrice ? (feastPrice > feastPrevPrice ? '➚' : feastPrice < sharkPrevPrice ? '➘' : '') : '';
   const sharkQtyChange = sharkPrevQty ? (sharkQty > sharkPrevQty ? '➚' : sharkQty < sharkPrevQty ? '➘' : '') : '';
   const feastQtyChange = feastPrevQty ? (feastQty > feastPrevQty ? '➚' : feastQty < feastPrevQty ? '➘' : '') : '';
 
-  const now = new Date();
   const days = ['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'];
-  const dateStr = `${now.getDate()}.${now.getMonth() + 1}.${now.getFullYear()} (${days[now.getDay()]}) ${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
+  const dateStr = `${now.getDate()}.${now.getMonth() + 1}.${now.getFullYear()}`;
+  const timeStr = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')} (${days[now.getDay()]})`;
 
   const message = `
-📈 ${dateStr}
+Пир ${feastStatus}  | Акула ${sharkStatus}
+------------------
+${dateStr}
+${timeStr}
 
-🦈 Акула   |   ${sharkStatus}
+
+🦈 Акула
 Общее количество: ${sharkQtyChange} ${sharkQty} 
 Мин. цена: ${sharkPriceChange} ${sharkPrice}g 
-Селрейт: ${sharkSales}/день
+Селлрейт: ${sharkSales}/день
 Лоты:
-1. ${sharkListings[0]?.price || '-'} g (${sharkListings[0]?.quantity || 0})
-2. ${sharkListings[1]?.price || '-'} g (${sharkListings[1]?.quantity || 0})
-3. ${sharkListings[2]?.price || '-'} g (${sharkListings[2]?.quantity || 0})
+  1. ${sharkListings[0]?.price || '-'}g (${sharkListings[0]?.quantity || 0})
+  2. ${sharkListings[1]?.price || '-'}g (${sharkListings[1]?.quantity || 0})
+  3. ${sharkListings[2]?.price || '-'}g (${sharkListings[2]?.quantity || 0})
 
-🍜 Пир   |   ${feastStatus}
+🍜 Пир
 Общее количество: ${feastQtyChange} ${feastQty} 
 Мин. цена: ${feastPriceChange} ${feastPrice}g 
-Селрейт: ${feastSales}/день
+Селлрейт: ${feastSales}/день
 Лоты:
-1. ${feastListings[0]?.price || '-'} g (${feastListings[0]?.quantity || 0})
-2. ${feastListings[1]?.price || '-'} g (${feastListings[1]?.quantity || 0})
-3. ${feastListings[2]?.price || '-'} g (${feastListings[2]?.quantity || 0})
+  1. ${feastListings[0]?.price || '-'}g (${feastListings[0]?.quantity || 0})
+  2. ${feastListings[1]?.price || '-'}g (${feastListings[1]?.quantity || 0})
+  3. ${feastListings[2]?.price || '-'}g (${feastListings[2]?.quantity || 0})
+
 
 💰 Прибыль на 1000 акул
 Текущая: ${currentAnalysis.totalProfit}g
@@ -70,10 +77,10 @@ async function checkPrices() {
   `.trim();
 
   await sendMessage(message);
-  if (process.env.GITHUB_ACTIONS) process.exit(0); // Завершаем в Actions
+  if (process.env.GITHUB_ACTIONS) process.exit(0);
 }
 
-// Для локального теста оставляем schedule, в Actions он не нужен
+// Для локального теста
 if (!process.env.GITHUB_ACTIONS) {
   const schedule = require('node-schedule');
   schedule.scheduleJob('*/5 * * * *', checkPrices);
