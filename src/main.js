@@ -1,4 +1,3 @@
-const schedule = require('node-schedule');
 const { fetchItemPrices } = require('./api/saddlebag-scraper');
 const { calculateProfit } = require('./calculations/profit');
 const { recipes } = require('./config/recipes');
@@ -35,10 +34,10 @@ async function checkPrices() {
   const sharkStatus = sharkPrice <= 501 ? '✅' : sharkPrice <= 510 ? '❓' : '❌';
   const feastStatus = feastPrice >= 445 ? '✅✅' : feastPrice >= 420 ? '✅' : feastPrice >= 405 ? '❓' : '❌';
 
-  const sharkPriceChange = sharkPrevPrice ? (sharkPrice > sharkPrevPrice ? '🟢' : sharkPrice < sharkPrevPrice ? '🔴' : '') : '';
-  const feastPriceChange = feastPrevPrice ? (feastPrice > feastPrevPrice ? '🟢' : feastPrice < feastPrevPrice ? '🔴' : '') : '';
-  const sharkQtyChange = sharkPrevQty ? (sharkQty > sharkPrevQty ? '🟢' : sharkQty < sharkPrevQty ? '🔴' : '') : '';
-  const feastQtyChange = feastPrevQty ? (feastQty > feastPrevQty ? '🟢' : feastQty < feastPrevQty ? '🔴' : '') : '';
+  const sharkPriceChange = sharkPrevPrice ? (sharkPrice > sharkPrevPrice ? '➚' : sharkPrice < sharkPrevPrice ? '➘' : '') : '';
+  const feastPriceChange = feastPrevPrice ? (feastPrice > feastPrevPrice ? '➚' : feastPrice < feastPrevPrice ? '➘' : '') : '';
+  const sharkQtyChange = sharkPrevQty ? (sharkQty > sharkPrevQty ? '➚' : sharkQty < sharkPrevQty ? '➘' : '') : '';
+  const feastQtyChange = feastPrevQty ? (feastQty > feastPrevQty ? '➚' : feastQty < feastPrevQty ? '➘' : '') : '';
 
   const now = new Date();
   const days = ['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'];
@@ -71,7 +70,13 @@ async function checkPrices() {
   `.trim();
 
   await sendMessage(message);
+  if (process.env.GITHUB_ACTIONS) process.exit(0); // Завершаем в Actions
 }
 
-schedule.scheduleJob('*/5 * * * *', checkPrices);
+// Для локального теста оставляем schedule, в Actions он не нужен
+if (!process.env.GITHUB_ACTIONS) {
+  const schedule = require('node-schedule');
+  schedule.scheduleJob('*/5 * * * *', checkPrices);
+}
+
 checkPrices();

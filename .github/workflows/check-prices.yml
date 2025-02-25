@@ -7,7 +7,7 @@ on:
 jobs:
   check-prices:
     runs-on: ubuntu-latest
-    timeout-minutes: 2 # 2 минуты на выполнение
+    # timeout-minutes: 1  # 1 минута на выполнение
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
