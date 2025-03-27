@@ -37,8 +37,8 @@ async function checkPrices() {
   const targetFeastPrice30k = Math.ceil((targetProfit30k + totalCost) / totalItems / 0.95); // Для 30k
   const targetFeastPrice50k = Math.ceil((targetProfit50k + totalCost) / totalItems / 0.95); // Для 50k
 
-  // Отправка, если прибыль ≥ 30,000g
-  if (currentProfit >= 30000) {
+  // Отправка, если прибыль ≥ 15,000g
+  if (currentProfit >= 15000) {
     const sharkPriceChange = sharkPrevPrice ? (sharkPrice > sharkPrevPrice ? '➚' : sharkPrice < sharkPrevPrice ? '➘' : '') : '';
     const feastPriceChange = feastPrevPrice ? (feastPrice > feastPrevPrice ? '➚' : feastPrice < feastPrevPrice ? '➘' : '') : '';
     const sharkQtyChange = sharkPrevQty ? (sharkQty > sharkPrevQty ? '➚' : sharkQty < sharkPrevQty ? '➘' : '') : '';
@@ -52,17 +52,17 @@ async function checkPrices() {
     const feastListings = prices[FEAST_ID]?.listings || [];
 
     const message = `
-📈 Текущая прибыль: ${Math.round(currentProfit)} g
-Минимальная цена пирога: ${minFeastPrice} g
-Цена пирога для 30k: ${targetFeastPrice30k} g
-Цена пирога для 50k: ${targetFeastPrice50k} g
+📈 Текущая прибыль: ${Math.round(currentProfit)}g
+Минимальная цена пира: ${minFeastPrice}g
+Цена пира для 30k: ${targetFeastPrice30k}g
+Цена пира для 50k: ${targetFeastPrice50k}g
 -----
 ${dateStr}
 ${timeStr}
 
 🦈 Акула
-Общее количество: ${sharkQty} ${sharkQtyChange}
-Мин. цена: ${sharkPrice} g ${sharkPriceChange}
+Общее количество: ${sharkQtyChange} ${sharkQty} 
+Мин. цена: ${sharkPriceChange} ${sharkPrice}g 
 Селрейт: ${sharkSales}/день
 Лоты:
 1. ${sharkListings[0]?.price || '-'} g (${sharkListings[0]?.quantity || 0})
@@ -70,8 +70,8 @@ ${timeStr}
 3. ${sharkListings[2]?.price || '-'} g (${sharkListings[2]?.quantity || 0})
 
 🍜 Пир
-Общее количество: ${feastQty} ${feastQtyChange}
-Мин. цена: ${feastPrice} g ${feastPriceChange}
+Общее количество: ${feastQtyChange} ${feastQty} 
+Мин. цена: ${feastPriceChange} ${feastPrice}g 
 Селрейт: ${feastSales}/день
 Лоты:
 1. ${feastListings[0]?.price || '-'} g (${feastListings[0]?.quantity || 0})
@@ -81,7 +81,7 @@ ${timeStr}
 
     await sendMessage(message);
   } else {
-    console.log(`Прибыль (${Math.round(currentProfit)} g) меньше 30,000 g — сообщение не отправлено`);
+    console.log(`Прибыль (${Math.round(currentProfit)}g) меньше 15,000 g — сообщение не отправлено`);
   }
 
   if (process.env.GITHUB_ACTIONS) process.exit(0);
